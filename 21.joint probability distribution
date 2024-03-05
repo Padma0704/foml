@@ -1,0 +1,30 @@
+import itertools
+
+# Define the conditional probabilities
+P_D1 = {'true': 0.2, 'false': 0.8}
+P_D2 = {'true': 0.3, 'false': 0.7}
+P_D3 = {'true': 0.4, 'false': 0.6}
+
+P_S1_given_D1 = {'true': {'true': 0.9, 'false': 0.1}, 'false': {'true': 0.1, 'false': 0.9}}
+P_S2_given_D1_D2 = {'true': {'true': {'true': 0.8, 'false': 0.2}, 'false': {'true': 0.2, 'false': 0.8}}, 'false': {'true': {'true': 0.2, 'false': 0.8}, 'false': {'true': 0.8, 'false': 0.2}}}
+P_S3_given_D1_D3 = {'true': {'true': {'true': 0.7, 'false': 0.3}, 'false': {'true': 0.3, 'false': 0.7}}, 'false': {'true': {'true': 0.3, 'false': 0.7}, 'false': {'true': 0.7, 'false': 0.3}}}
+P_S4_given_D3 = {'true': {'true': 0.5, 'false': 0.5}, 'false': {'true': 0.5, 'false': 0.5}}
+
+# Function to calculate joint probability distribution
+def calculate_joint_probability():
+    joint_prob = {}
+    for values in itertools.product(['true', 'false'], repeat=7):
+        D1, D2, D3, S1, S2, S3, S4 = values
+        joint_prob[values] = P_D1[D1] * P_D2[D2] * P_D3[D3] * P_S1_given_D1[D1][S1] * P_S2_given_D1_D2[D1][D2][S2] * P_S3_given_D1_D3[D1][D3][S3] * P_S4_given_D3[D3][S4]
+    return joint_prob
+
+# Calculate joint probability distribution
+joint_probabilities = calculate_joint_probability()
+
+# Print joint probabilities
+for values, probability in joint_probabilities.items():
+    print(f"{' '.join(values)}: {probability}")
+
+# Calculate the number of independent parameters
+num_parameters = len(P_D1) + len(P_D2) + len(P_D3) + len(P_S1_given_D1['true']) + len(P_S2_given_D1_D2['true']['true']) + len(P_S3_given_D1_D3['true']['true']) + len(P_S4_given_D3['true'])
+print(f"\nNumber of independent parameters with conditional independence: {num_parameters}")
