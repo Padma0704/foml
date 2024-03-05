@@ -1,0 +1,39 @@
+import numpy as np
+
+# Define the training examples
+training_examples = np.array([
+    [33.6, 50, 1],
+    [26.6, 30, 0],
+    [23.4, 40, 0],
+    [43.1, 67, 0],
+    [35.3, 23, 1],
+    [35.9, 67, 1],
+    [36.7, 45, 1],
+    [25.7, 46, 0],
+    [23.3, 29, 0],
+    [31, 56, 1]
+])
+
+# Test example
+test_example = np.array([43.6, 40])
+
+# Define the K value
+K = 3
+
+# Calculate Euclidean distance
+def euclidean_distance(example1, example2):
+    return np.sqrt(np.sum((example1 - example2) ** 2))
+
+# Find the K nearest neighbors
+distances = [euclidean_distance(test_example, example[:2]) for example in training_examples]
+nearest_indices = np.argsort(distances)[:K]
+nearest_labels = training_examples[nearest_indices][:, 2]
+
+# Predict the class based on majority voting
+predicted_label = np.bincount(nearest_labels).argmax()
+
+# Output the predicted class
+if predicted_label == 1:
+    print("The predicted sugar level is: Diabetic")
+else:
+    print("The predicted sugar level is: Non-Diabetic")
