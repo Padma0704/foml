@@ -1,0 +1,31 @@
+from collections import Counter
+
+# Define the training examples
+training_examples = {
+    'A': {'pepper': True, 'ginger': True, 'chilly': True, 'liked': False},
+    'B': {'pepper': True, 'ginger': False, 'chilly': False, 'liked': True},
+    'C': {'pepper': False, 'ginger': True, 'chilly': True, 'liked': False},
+    'D': {'pepper': False, 'ginger': True, 'chilly': False, 'liked': True},
+    'E': {'pepper': True, 'ginger': False, 'chilly': False, 'liked': True}
+}
+
+# New example
+new_example = {'pepper': False, 'ginger': True, 'chilly': True}
+
+# Calculate Hamming distance
+def hamming_distance(example1, example2):
+    distance = sum(example1[key] != example2[key] for key in example1.keys())
+    return distance
+
+# Find the 3 nearest neighbors
+nearest_neighbors = sorted(training_examples.keys(), key=lambda x: hamming_distance(training_examples[x], new_example))[:3]
+
+# Perform majority voting
+liked_counts = Counter(training_examples[neighbor]['liked'] for neighbor in nearest_neighbors)
+majority_class = liked_counts.most_common(1)[0][0]
+
+# Output the classification result
+if majority_class:
+    print("The new example is classified as LIKED.")
+else:
+    print("The new example is classified as DISLIKED.")
